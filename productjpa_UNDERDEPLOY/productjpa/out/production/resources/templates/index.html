@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Management</title>
+
+    <style>
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family:'Poppins',sans-serif;
+        }
+
+        body{
+            min-height:100vh;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            overflow:hidden;
+            background:#0f172a;
+            perspective:1500px;
+        }
+
+        /* Animated Background */
+
+        body::before,
+        body::after{
+            content:"";
+            position:absolute;
+            border-radius:50%;
+            filter:blur(120px);
+            opacity:.7;
+            animation:float 12s infinite ease-in-out;
+        }
+
+        body::before{
+            width:500px;
+            height:500px;
+            background:#7c3aed;
+            top:-150px;
+            left:-100px;
+        }
+
+        body::after{
+            width:450px;
+            height:450px;
+            background:#06b6d4;
+            bottom:-150px;
+            right:-100px;
+            animation-delay:4s;
+        }
+
+        .container{
+            width:90%;
+            max-width:850px;
+
+            background:rgba(255,255,255,.08);
+
+            backdrop-filter:blur(25px);
+
+            border:1px solid rgba(255,255,255,.15);
+
+            border-radius:30px;
+
+            padding:60px 50px;
+
+            text-align:center;
+
+            transform-style:preserve-3d;
+
+            transform:rotateX(8deg);
+
+            box-shadow:
+                    0 25px 80px rgba(0,0,0,.45),
+                    inset 0 1px 0 rgba(255,255,255,.2);
+
+            animation:cardFloat 6s infinite ease-in-out;
+        }
+
+        .icon{
+            font-size:85px;
+            margin-bottom:20px;
+            transform:translateZ(50px);
+            animation:bounce 3s infinite;
+        }
+
+        h1{
+            color:white;
+            font-size:4rem;
+            font-weight:800;
+            letter-spacing:2px;
+            margin-bottom:10px;
+
+            text-shadow:
+                    0 0 10px #fff,
+                    0 0 30px #8b5cf6,
+                    0 0 60px #8b5cf6;
+        }
+
+        p{
+            color:#d1d5db;
+            font-size:1.2rem;
+            margin-bottom:40px;
+        }
+
+        .btn-group{
+            display:flex;
+            justify-content:center;
+            gap:20px;
+            flex-wrap:wrap;
+            margin-bottom:35px;
+        }
+
+        .btn{
+            position:relative;
+            overflow:hidden;
+
+            text-decoration:none;
+            color:white;
+            padding:16px 35px;
+
+            border-radius:15px;
+
+            font-weight:600;
+
+            transition:.4s;
+
+            transform-style:preserve-3d;
+        }
+
+        .btn:hover{
+            transform:
+                    translateY(-8px)
+                    translateZ(30px);
+        }
+
+        .btn-list{
+            background:linear-gradient(
+                    135deg,
+                    #3b82f6,
+                    #06b6d4);
+            box-shadow:0 10px 30px rgba(59,130,246,.4);
+        }
+
+        .btn-add{
+            background:linear-gradient(
+                    135deg,
+                    #10b981,
+                    #34d399);
+            box-shadow:0 10px 30px rgba(16,185,129,.4);
+        }
+
+        .search-box{
+            display:flex;
+            gap:15px;
+            justify-content:center;
+            flex-wrap:wrap;
+        }
+
+        .search-box input{
+
+            width:380px;
+
+            padding:18px;
+
+            border:none;
+
+            border-radius:15px;
+
+            background:rgba(255,255,255,.1);
+
+            color:white;
+
+            backdrop-filter:blur(15px);
+
+            outline:none;
+
+            font-size:16px;
+
+            border:1px solid rgba(255,255,255,.15);
+        }
+
+        .search-box input::placeholder{
+            color:#cbd5e1;
+        }
+
+        .search-box input:focus{
+            box-shadow:
+                    0 0 20px rgba(139,92,246,.5);
+        }
+
+        .search-box button{
+
+            padding:18px 28px;
+
+            border:none;
+
+            border-radius:15px;
+
+            cursor:pointer;
+
+            color:white;
+
+            font-weight:600;
+
+            background:linear-gradient(
+                    135deg,
+                    #f97316,
+                    #ef4444);
+
+            transition:.3s;
+
+            box-shadow:
+                    0 10px 30px rgba(239,68,68,.4);
+        }
+
+        .search-box button:hover{
+            transform:
+                    translateY(-5px)
+                    scale(1.05);
+        }
+
+        @keyframes float{
+            0%,100%{
+                transform:translateY(0);
+            }
+            50%{
+                transform:translateY(-80px);
+            }
+        }
+
+        @keyframes cardFloat{
+            0%,100%{
+                transform:
+                        rotateX(8deg)
+                        translateY(0);
+            }
+
+            50%{
+                transform:
+                        rotateX(8deg)
+                        translateY(-12px);
+            }
+        }
+
+        @keyframes bounce{
+            0%,100%{
+                transform:translateY(0);
+            }
+
+            50%{
+                transform:translateY(-12px);
+            }
+        }
+
+        @media(max-width:768px){
+
+            .container{
+                padding:40px 25px;
+            }
+
+            h1{
+                font-size:2.5rem;
+            }
+
+            .search-box{
+                flex-direction:column;
+            }
+
+            .search-box input,
+            .search-box button{
+                width:100%;
+            }
+
+            .btn-group{
+                flex-direction:column;
+            }
+
+            .btn{
+                width:100%;
+            }
+        }
+
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="icon">📦</div>
+
+    <h1>Product Management</h1>
+
+    <p>
+        Spring Boot • JPA • Thymeleaf
+    </p>
+
+    <div class="btn-group">
+
+        <a class="btn btn-list"
+           th:href="@{/products}">
+            📋 Product List
+        </a>
+
+        <a class="btn btn-add"
+           th:href="@{/products/new}">
+            ➕ Add Product
+        </a>
+
+    </div>
+
+    <form class="search-box"
+          th:action="@{/products/search}"
+          method="get">
+
+        <input
+                type="text"
+                name="keyword"
+                placeholder="🔍 Search Products..."
+                required>
+
+        <button type="submit">
+            Search Product
+        </button>
+
+    </form>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title th:text="${product.id == null} ? 'Add Product' : 'Edit Product'">
+    Product Form
+  </title>
+
+  <style>
+
+    *{
+        margin:0;
+        padding:0;
+        box-sizing:border-box;
+        font-family:'Segoe UI',sans-serif;
+    }
+
+    body{
+        min-height:100vh;
+        display:flex;
+        justify-content:center;
+        align-items:center;
+        overflow:hidden;
+        background:#0f172a;
+        padding:30px;
+        perspective:1500px;
+    }
+
+    /* BACKGROUND ORBS */
+    body::before,
+    body::after{
+        content:"";
+        position:absolute;
+        width:500px;
+        height:500px;
+        border-radius:50%;
+        filter:blur(130px);
+        opacity:.7;
+        z-index:0;
+        animation:float 12s infinite ease-in-out;
+    }
+
+    body::before{
+        background:#7c3aed;
+        top:-160px;
+        left:-120px;
+    }
+
+    body::after{
+        background:#06b6d4;
+        bottom:-160px;
+        right:-120px;
+        animation-delay:4s;
+    }
+
+    .card{
+        position:relative;
+        z-index:1;
+
+        width:100%;
+        max-width:650px;
+
+        background:rgba(255,255,255,0.08);
+        backdrop-filter:blur(25px);
+
+        border:1px solid rgba(255,255,255,0.15);
+
+        border-radius:30px;
+
+        padding:40px;
+
+        box-shadow:
+            0 30px 80px rgba(0,0,0,0.6),
+            inset 0 1px 0 rgba(255,255,255,0.1);
+
+        transform:rotateX(6deg);
+
+        animation:cardFloat 6s ease-in-out infinite;
+    }
+
+    .header{
+        text-align:center;
+        margin-bottom:30px;
+    }
+
+    .header h2{
+        font-size:2.4rem;
+        font-weight:800;
+        color:white;
+        text-shadow:
+            0 0 15px rgba(255,255,255,0.5),
+            0 0 30px rgba(124,58,237,0.6);
+    }
+
+    .header p{
+        color:#cbd5e1;
+        margin-top:6px;
+    }
+
+    .form-group{
+        margin-bottom:18px;
+    }
+
+    label{
+        display:block;
+        margin-bottom:8px;
+        color:#cbd5e1;
+        font-weight:600;
+        letter-spacing:1px;
+        font-size:13px;
+        text-transform:uppercase;
+    }
+
+    input,
+    textarea{
+        width:100%;
+        padding:16px;
+        border-radius:16px;
+
+        border:none;
+        outline:none;
+
+        background:rgba(255,255,255,0.1);
+        color:white;
+
+        backdrop-filter:blur(10px);
+
+        border:1px solid rgba(255,255,255,0.15);
+
+        transition:.3s;
+        font-size:15px;
+    }
+
+    input::placeholder,
+    textarea::placeholder{
+        color:#94a3b8;
+    }
+
+    input:focus,
+    textarea:focus{
+        box-shadow:0 0 20px rgba(124,58,237,0.4);
+        transform:translateY(-2px);
+    }
+
+    textarea{
+        min-height:120px;
+        resize:vertical;
+    }
+
+    .img-preview{
+        text-align:center;
+        margin:20px 0;
+    }
+
+    .img-preview img{
+        width:180px;
+        height:180px;
+        object-fit:cover;
+        border-radius:20px;
+        box-shadow:0 15px 40px rgba(0,0,0,0.4);
+        transition:.4s;
+    }
+
+    .img-preview img:hover{
+        transform:scale(1.08) rotateY(8deg);
+    }
+
+    .btn{
+        width:100%;
+        border:none;
+        padding:16px;
+        border-radius:16px;
+
+        font-size:16px;
+        font-weight:700;
+        cursor:pointer;
+
+        color:white;
+
+        background:linear-gradient(135deg,#4f46e5,#7c3aed);
+
+        box-shadow:0 15px 35px rgba(124,58,237,0.4);
+
+        transition:.3s;
+    }
+
+    .btn:hover{
+        transform:translateY(-5px) scale(1.02);
+    }
+
+    .back{
+        display:block;
+        text-align:center;
+        margin-top:18px;
+        text-decoration:none;
+        color:#cbd5e1;
+        font-weight:600;
+        transition:.3s;
+    }
+
+    .back:hover{
+        color:white;
+    }
+
+    /* ANIMATIONS */
+    @keyframes float{
+        0%,100%{transform:translateY(0);}
+        50%{transform:translateY(-80px);}
+    }
+
+    @keyframes cardFloat{
+        0%,100%{
+            transform:rotateX(6deg) translateY(0);
+        }
+        50%{
+            transform:rotateX(6deg) translateY(-12px);
+        }
+    }
+
+    /* RESPONSIVE */
+    @media(max-width:768px){
+
+        .card{
+            padding:25px;
+        }
+
+        .header h2{
+            font-size:1.8rem;
+        }
+
+        .img-preview img{
+            width:140px;
+            height:140px;
+        }
+    }
+
+  </style>
+
+</head>
+
+<body>
+
+<div class="card">
+
+  <div class="header">
+
+    <h2 th:text="${product.id == null} ? '➕ Add Product' : '✏️ Edit Product'"></h2>
+
+    <p>Manage your products in a modern cinematic UI</p>
+
+  </div>
+
+  <form th:action="${product.id == null}
+                     ? @{/products/save}
+                     : @{/products/update/{id}(id=${product.id})}"
+        method="post"
+        enctype="multipart/form-data">
+
+    <div class="form-group">
+      <label>Product Name</label>
+      <input type="text"
+             name="name"
+             th:value="${product.name}"
+             placeholder="Enter product name"
+             required>
+    </div>
+
+    <div class="form-group">
+      <label>Price</label>
+      <input type="number"
+             name="price"
+             th:value="${product.price}"
+             placeholder="Enter price"
+             required>
+    </div>
+
+    <div class="form-group">
+      <label>Stock</label>
+      <input type="number"
+             name="stock"
+             th:value="${product.stock}"
+             placeholder="Enter stock"
+             required>
+    </div>
+
+    <div class="form-group">
+      <label>Description</label>
+      <textarea name="details"
+                placeholder="Enter product details"
+                th:text="${product.details}">
+      </textarea>
+    </div>
+
+    <div class="img-preview"
+         th:if="${product.imagename != null}">
+
+      <img th:src="@{'/uploads/' + ${product.imagename}}">
+
+    </div>
+
+    <div class="form-group">
+      <label>Upload Image</label>
+      <input type="file" name="imageFile">
+    </div>
+
+    <button class="btn"
+            type="submit"
+            th:text="${product.id == null} ? '💾 Save Product' : '🚀 Update Product'">
+    </button>
+
+  </form>
+
+  <a th:href="@{/products}" class="back">
+    ← Back to Products
+  </a>
+
+</div>
+
+</body>
+</html>
